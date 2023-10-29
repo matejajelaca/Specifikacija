@@ -1,5 +1,6 @@
-package data;
+package data.properties;
 
+import data.Property;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Projector implements Property{
+public class Projector implements Property {
 
     private boolean hasProjector;
 

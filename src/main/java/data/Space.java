@@ -1,13 +1,14 @@
 package data;
 
+import data.properties.Capacity;
+import data.properties.GraphicTable;
+import data.properties.NumberOfComputer;
+import data.properties.Projector;
 import exceptions.MandatoryPropertyException;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 // broj racunara imamo 30 racunara
 // da li zadovoljava broj racunara 20 racunara
@@ -18,51 +19,61 @@ import java.util.Set;
 
 @Setter
 @Getter
-public class Space {
+public class Space implements CriteriaMatch {
     private Map<String,Property> properties;
+    private String classroomName;
+    public static final Set<String> mandatoryProperties;
 
-    public Space(Map<String, Property> properties) throws MandatoryPropertyException {
+    static {
+        mandatoryProperties = new HashSet<>();
+        mandatoryProperties.add(Properties.CAPACITY);
+        mandatoryProperties.add(Properties.GRAPHIC_TABLE);
+        mandatoryProperties.add(Properties.NUMBER_OF_COMPUTER);
+        mandatoryProperties.add(Properties.PROJECTOR);
+    }
+
+    public Space(String classroomName,Map<String, Property> properties) throws MandatoryPropertyException {
+        this.classroomName = classroomName;
         this.properties = properties;
-        Set<String> mandatory = new HashSet<>();
-        mandatory.add("capacity");
-        mandatory.add("graphictable");
-        mandatory.add("numberofcomputer");
-        mandatory.add("projector");
         long count = properties.values().stream()
-                .filter(propertie-> mandatory.contains(propertie.getClass().getName().toLowerCase()))
+                .filter(propertie-> mandatoryProperties.contains(propertie.getClass().getName().toLowerCase()))
                 .count();
         if(count<4){
             throw new MandatoryPropertyException();
         }
     }
 
-    public Space() {
+    public Space(String classroomName) {
         properties = new HashMap<>();
-        properties.put("capacity",new Capacity());
-        properties.put("graphicTable",new GraphicTable());
-        properties.put("numberOfComputer",new NumberOfComputer());
-        properties.put("projector",new Projector());
+        properties.put(Properties.CAPACITY,new Capacity());
+        properties.put(Properties.GRAPHIC_TABLE,new GraphicTable());
+        properties.put(Properties.NUMBER_OF_COMPUTER,new NumberOfComputer());
+        properties.put(Properties.PROJECTOR,new Projector());
     }
 
-    public Space(long capacity, int pcNumber, boolean projector, boolean graphicTable) {
+    public Space(String classroomName,long capacity, int pcNumber, boolean projector, boolean graphicTable) {
         properties = new HashMap<>();
-        properties.put("capacity",new Capacity(capacity));
-        properties.put("graphicTable",new GraphicTable(graphicTable));
-        properties.put("numberOfComputer",new NumberOfComputer(pcNumber));
-        properties.put("projector",new Projector(projector));
+        properties.put(Properties.CAPACITY,new Capacity(capacity));
+        properties.put(Properties.GRAPHIC_TABLE,new GraphicTable(graphicTable));
+        properties.put(Properties.NUMBER_OF_COMPUTER,new NumberOfComputer(pcNumber));
+        properties.put(Properties.PROJECTOR,new Projector(projector));
     }
 
     public void addProperty(String name,Property property){
         this.properties.put(name,property);
     }
 
-    public boolean isMatched(Map<String, Property> criteria){
-        for(String key: criteria.keySet()){
-            if(!properties.containsKey(key) || !properties.get(key).criteriaMatched(criteria.get(key))){
-                return false;
-            }
-        }
-        return true;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Space space = (Space) o;
+        return classroomName.equalsIgnoreCase(space.classroomName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(classroomName);
     }
 
     @Override
@@ -73,5 +84,26 @@ public class Space {
         }
         stringBuilder.deleteCharAt(stringBuilder.length()-1);
         return stringBuilder.toString();
+    }
+
+    @Override
+    public boolean isCriteriaMatched(Map<String, Property> criteria) {
+        for(String key: criteria.keySet()){
+            if(!isCriteriaMatched(key,criteria.get(key)))
+                return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean isCriteriaMatched(String name, Property property) {
+        return properties.containsKey(name) && properties.get(name).criteriaMatched(property);
+    }
+
+    public static final class Properties{
+        public static final String CAPACITY = "capacity";
+        public static final String PROJECTOR = "projector";
+        public static final String NUMBER_OF_COMPUTER = "numberOfComputer";
+        public static final String GRAPHIC_TABLE = "graphicTable";
     }
 }
