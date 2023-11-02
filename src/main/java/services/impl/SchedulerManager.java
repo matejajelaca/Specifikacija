@@ -9,7 +9,7 @@ import services.SchedulerSearch;
 import java.util.List;
 import java.util.Map;
 
-public class SchedulerManager implements SchedulerBasic, SchedulerSearch {
+public abstract class SchedulerManager implements SchedulerBasic, SchedulerSearch {
 
     public void addRoom(Scheduler scheduler, Space room){
         if (!scheduler.getRooms().contains(room))
@@ -68,8 +68,7 @@ public class SchedulerManager implements SchedulerBasic, SchedulerSearch {
 
     public boolean isOccupied(Scheduler scheduler, SchedulerItem schedulerItem){
         for(SchedulerItem schedulerItem1:scheduler.getSchedulerItems()){
-            if(
-                    schedulerItem1.getTimePeriod().isOverlap(schedulerItem.getTimePeriod())
+            if(schedulerItem1.getTimePeriod().isOverlap(schedulerItem.getTimePeriod())
                             && schedulerItem1.getSpace().equals(schedulerItem.getSpace())
             ) return true;
         }
