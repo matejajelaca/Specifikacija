@@ -85,4 +85,12 @@ public abstract class SchedulerManager implements SchedulerBasic, SchedulerSearc
                         schedulerItem.isCriteriaMatched(propertyName,property)
                 ).toList();
     }
+
+    @Override
+    public List<SchedulerItem> getOccupiedAppointments(Scheduler scheduler, Map<String, Property> properties) {
+        return scheduler.getSchedulerItems().stream().
+                filter(schedulerItem ->
+                        schedulerItem.isCriteriaMatched(properties)
+                ).toList();
+    }
 }

@@ -105,5 +105,6 @@ public class Space implements CriteriaMatch {
         public static final String PROJECTOR = "projector";
         public static final String NUMBER_OF_COMPUTER = "numberOfComputer";
         public static final String GRAPHIC_TABLE = "graphicTable";
+        public static final String CLASSROOM = "classRoom";
     }
 }
