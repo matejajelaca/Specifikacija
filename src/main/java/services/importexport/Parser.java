@@ -7,6 +7,7 @@ import data.TimePeriod;
 import data.importexport.Configuration;
 import exceptions.MandatoryPropertyException;
 
+import java.io.File;
 import java.io.FileReader;
 
 public abstract class Parser {
@@ -15,5 +16,6 @@ public abstract class Parser {
 
     public abstract SchedulerItem parse(Configuration configuration, Object object) throws MandatoryPropertyException;
     public abstract Space parseRoom(Configuration configuration, Object object) throws MandatoryPropertyException;
-    public abstract TimePeriod parseTimePeriod(Configuration configuration, Object object) ;
+    public abstract TimePeriod parseTimePeriod(Configuration configuration, Object object);
+    public abstract void writeInto(File file, Configuration configuration, Scheduler scheduler);
 }

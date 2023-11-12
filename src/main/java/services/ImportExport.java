@@ -14,6 +14,6 @@ public interface ImportExport {
     void addColumnSpace(ConfigurationItem space);
     void addSpacePropertie(String columnName,int index, Property property);
     Scheduler importFromFile(String fileName, Parser parser) throws FileNotFoundException, MandatoryPropertyException;
-
+    void export(String fileName, Parser parser) throws FileNotFoundException, MandatoryPropertyException;
 
 }
